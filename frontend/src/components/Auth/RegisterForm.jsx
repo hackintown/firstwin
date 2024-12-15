@@ -126,7 +126,7 @@ export default function RegisterForm() {
           <IoIosArrowBack className="h-6 w-6" />
         </button>
         <div className="flex-1 flex justify-center">
-          <h1 className="text-4xl font-bold text-white tracking-wider drop-shadow-lg">
+          <h1 className="text-3xl font-bold text-white tracking-wider drop-shadow-lg">
             {t("header.title")}
           </h1>
         </div>
@@ -182,7 +182,7 @@ export default function RegisterForm() {
 
       {/* Title Section */}
       <div className="relative px-6 pt-8 pb-12 text-white text-center">
-        <h2 className="text-4xl font-bold mb-4 drop-shadow-lg">
+        <h2 className="text-4xl font-bold mb-4 drop-shadow-lg underline underline-offset-2">
           {t("header.register_now")}
         </h2>
         <p className="text-lg text-white/90 font-light">
