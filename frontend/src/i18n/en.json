@@ -1,12 +1,13 @@
 {
   "header": {
     "back": "Back",
-    "title": "First Win",
+    "title": "FirstWin",
     "register_now": "Register Now",
-    "join_us": "Join us and start winning today!"
+    "join_us": "Please register your phone number to continue",
+    "login": "Login"
   },
   "form": {
-    "create_account": "Create your account",
+    "create_account": "Register Your Phone",
     "phone_number": "Phone Number",
     "phone_number_placeholder": "Enter your phone number",
     "password": "Password",
@@ -14,8 +15,23 @@
     "confirm_password": "Confirm Password",
     "confirm_password_placeholder": "Re-enter your password",
     "invite_code": "Invite Code",
-    "privacy_agreement": "I agree to the Terms of Service and Privacy Policy",
     "register": "Register",
-    "login_prompt": "Already have an account? Log in here"
+    "login_prompt": "Already have an account? Log in here",
+    "i_have_read": "I have read and agree",
+    "privacy_agreement": "Privacy Agreement",
+    "i_have_account": "I have an account",
+    "login": "Login",
+    "email_address": "Email Address",
+    "email_placeholder": "Enter your email",
+    "remember_password": "Remember password",
+    "forgot_password": "Forgot password?",
+    "dont_have_account": "Don't have an account?",
+    "customer_service": "Customer Service",
+    "phone_login": "Phone Number",
+    "email_login": "Email Login",
+    "age_verification": "Age verification required. Must be 18+ to register",
+    "play_responsibly": "Play responsibly. Gambling can be addictive.",
+    "learn_more": "Learn more about responsible gambling",
+    "terms_conditions": "View Terms & Conditions"
   }
 }

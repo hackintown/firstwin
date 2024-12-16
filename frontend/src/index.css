@@ -13,6 +13,64 @@ body {
   font-family: "Poppins", sans-serif;
 }
 
+:root {
+  /* Backgrounds */
+  --background: 250, 15%, 15%; /* Deep Charcoal */
+  --foreground: 0, 0%, 95%; /* Almost White */
+  --card: 255, 10%, 20%; /* Dark Red */
+  --card-foreground: 0, 0%, 95%; /* Almost White */
+  --popover: 0, 0%, 20%; /* Soft Black */
+  --popover-foreground: 0, 0%, 90%; /* Light Grey */
+
+  /* Primary and Secondary Colors */
+  --primary: 45, 100%, 50%; /* Vibrant Gold */
+  --primary-foreground: 0, 0%, 10%; /* Near Black */
+  --secondary: 210, 50%, 40%; /* Cool Blue */
+  --secondary-foreground: 0, 0%, 95%; /* Almost White */
+
+  /* Accent Colors */
+  --tertiary: 340, 65%, 47%; /* Crimson Red */
+  --tertiary-foreground: 0, 0%, 95%; /* Almost White */
+  --muted: 0, 0%, 30%; /* Dim Grey */
+  --muted-foreground: 0, 0%, 70%; /* Light Grey */
+  --accent: 220, 60%, 50%; /* Royal Blue */
+  --accent-foreground: 0, 0%, 100%; /* White */
+
+  /* Alerts */
+  --destructive: 0, 85%, 50%; /* Bright Red */
+  --destructive-foreground: 0, 0%, 95%; /* Almost White */
+  --success: 120, 70%, 40%; /* Green */
+  --success-foreground: 0, 0%, 95%; /* Almost White */
+  --warning: 45, 90%, 51%; /* Rich Yellow */
+  --warning-foreground: 0, 0%, 20%; /* Dark Grey */
+  --info: 210, 85%, 60%; /* Bright Blue */
+  --info-foreground: 0, 0%, 95%; /* Almost White */
+
+  /* Borders and Inputs */
+  --border: 0, 0%, 35%; /* Neutral Grey */
+  --input: 210, 20%, 90%; /* Light Grey */
+  --ring: 45, 90%, 50%; /* Gold Ring */
+  --radius: 0.5rem; /* Rounded Corners */
+
+  /* Shadows */
+  --shadow: 0, 0%, 20%; /* Subtle Black Shadow */
+
+  /* Typography */
+  --font-family: "Poppins", "Roboto", sans-serif;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(
+    135deg,
+    hsl(45, 100%, 50%),
+    hsl(35, 100%, 60%)
+  );
+  --gradient-secondary: linear-gradient(
+    135deg,
+    hsl(210, 85%, 50%),
+    hsl(210, 60%, 40%)
+  );
+}
+
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
@@ -40,3 +98,34 @@ body {
     transform: translateY(0);
   }
 }
+
+/* Color Usage Guide:
+
+    --background: Background color of the main content.
+    --foreground: Primary text color.
+    --card: Background color for cards.
+    --card-foreground: Text color on cards.
+    --popover: Background color for popovers.
+    --popover-foreground: Text color on popovers.
+    --primary: Primary color (e.g., buttons, links).
+    --primary-foreground: Text color on primary elements.
+    --secondary: Secondary color (e.g., secondary buttons, highlights).
+    --secondary-foreground: Text color on secondary elements.
+    --muted: Muted color (e.g., background for less important elements).
+    --muted-foreground: Text color on muted elements.
+    --accent: Accent color (e.g., icons, special highlights).
+    --accent-foreground: Text color on accent elements.
+    --destructive: Color for destructive actions (e.g., delete buttons).
+    --destructive-foreground: Text color on destructive elements.
+    --success: Color for success messages or actions.
+    --success-foreground: Text color on success elements.
+    --warning: Color for warning messages or actions.
+    --warning-foreground: Text color on warning elements.
+    --info: Color for informational messages or actions.
+    --info-foreground: Text color on informational elements.
+    --border: Color for borders and outlines.
+    --input: Background color for input fields.
+    --ring: Color for focus rings.
+    --radius: Border radius for rounded corners.
+    --shadow: Color for shadows.
+    --font-family: Font family for text. */

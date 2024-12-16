@@ -1,9 +1,10 @@
 {
   "header": {
     "back": "पीछे",
-    "title": "1st Win",
+    "title": "फर्स्ट विन",
     "register_now": "अभी पंजीकरण करें",
-    "join_us": "हमसे जुड़ें और आज ही जीतना शुरू करें!"
+    "join_us": "हमसे जुड़ें और आज ही जीतना शुरू करें!",
+    "login": "लॉग इन करें"
   },
   "form": {
     "create_account": "अपना खाता बनाएं",
@@ -16,6 +17,21 @@
     "invite_code": "आमंत्रण कोड",
     "privacy_agreement": "मैं सेवा की शर्तों और गोपनीयता नीति से सहमत हूं",
     "register": "पंजीकरण करें",
-    "login_prompt": "पहले से एक खाता है? यहां लॉग इन करें"
+    "login_prompt": "पहले से एक खाता है? यहां लॉग इन करें",
+    "i_have_read": "मैंने पढ़ा और सहमत हूं",
+    "i_have_account": "मेरा खाता पहले से है",
+    "login": "लॉग इन",
+    "email_address": "ईमेल पता",
+    "email_placeholder": "अपना ईमेल दर्ज करें",
+    "remember_password": "पासवर्ड याद रखें",
+    "forgot_password": "पासवर्ड भूल गए?",
+    "dont_have_account": "खाता नहीं है?",
+    "customer_service": "ग्राहक सेवा",
+    "phone_login": "फ़ोन नंबर",
+    "email_login": "ईमेल लॉगिन",
+    "age_verification": "आयु सत्यापन आवश्यक है। पंजीकरण के लिए 18+ होना चाहिए",
+    "play_responsibly": "जिम्मेदारी से खेलें। जुआ लत लग सकती है।",
+    "learn_more": "जिम्मेदार जुआ के बारे में और जानें",
+    "terms_conditions": "नियम और शर्तें देखें"
   }
 }
