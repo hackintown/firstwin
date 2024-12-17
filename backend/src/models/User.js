@@ -9,12 +9,12 @@ const userSchema = new mongoose.Schema(
       sparse: true,
       match: [/^\d{10,15}$/, "Invalid phone number"],
     },
-    email: {
-      type: String,
-      unique: true,
-      sparse: true,
-      match: [/.+@.+\..+/, "Invalid email address"],
-    },
+    // email: {
+    //   type: String,
+    //   unique: true,
+    //   sparse: true,
+    //   match: [/.+@.+\..+/, "Invalid email address"],
+    // },
     password: {
       type: String,
       required: true,

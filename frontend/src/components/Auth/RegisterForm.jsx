@@ -17,7 +17,7 @@ import Header from "../Common/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { registerThunk } from "../../features/auth/authThunks";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const countryCodes = [
   {
@@ -63,11 +63,11 @@ export default function RegisterForm() {
   const [selectedCountryCode, setSelectedCountryCode] = useState("+91");
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const countrySelectorRef = useRef(null);
+  const navigate = useNavigate();
   const [passwordStrength, setPasswordStrength] = useState(0);
 
   const [formData, setFormData] = useState({
     phone: "",
-    email: "",
     password: "",
     confirmPassword: "",
     agreeToTerms: false,
@@ -101,14 +101,13 @@ export default function RegisterForm() {
     try {
       const payload = {
         phone: formData.phone,
-        email: formData.email,
         password: formData.password,
         countryCode: selectedCountryCode,
         agreeToTerms: formData.agreeToTerms,
       };
       await dispatch(registerThunk(payload)).unwrap();
       toast.success("Registration successful! Redirecting to login...");
-      // Add redirect logic if needed, e.g., navigate to login page
+      navigate("/login");
     } catch (error) {
       toast.error(error);
     }
@@ -122,28 +121,29 @@ export default function RegisterForm() {
       </div>
       <Header />
       {/* Title Section */}
-      <div className="relative px-6 pt-6 pb-6 text-foreground">
-        <h2 className="text-2xl font-bold mb-2 drop-shadow-lg text-primary">
+      <div className="relative px-4 pt-4 pb-8 text-foreground">
+        <h2 className="text-2xl font-medium mb-1 drop-shadow-lg text-tertiary-foreground">
           {t("header.register_now")}
         </h2>
-        <p className="text-base text-foreground font-light">
+        <p className="text-sm text-foreground font-light">
           {t("header.join_us")}
         </p>
       </div>
 
       {/* Form Section */}
-      <div className="relative bg-[#1A1C2C]/95 backdrop-blur-xl rounded-t-[2.5rem] min-h-screen p-6 shadow-2xl">
+      <div className="relative bg-background border border-border backdrop-blur-xl rounded-t-[2.5rem] min-h-screen p-6 shadow-2xl">
         <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-6">
           {/* Register Phone Title */}
-          <div className="flex flex-col items-center gap-3 justify-center text-primary mb-8">
+          <div className="flex flex-col items-center gap-3 justify-center text-primary mb-8 lg:mb-14 relative">
             <IoMdPhonePortrait className="h-8 w-8 text-primary" />
-            <h3 className="text-xl font-bold text-primary">
+            <h3 className="text-xl font-medium text-primary">
               {t("form.create_account")}
             </h3>
+            <div className="absolute -bottom-4 right-0 left-0 w-[90%] mx-auto h-[2px] bg-primary" />
           </div>
 
           {/* Phone Input */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="flex items-center gap-2 text-gray-200 font-semibold mb-2">
               <FaPhone className="h-5 w-5 text-primary" />
               {t("form.phone_number")}
@@ -155,7 +155,7 @@ export default function RegisterForm() {
               <button
                 type="button"
                 onClick={() => setShowCountryDropdown(!showCountryDropdown)}
-                className="flex items-center justify-between gap-2 w-[120px] px-3 py-3 
+                className="flex items-center justify-between gap-2 w-[120px] px-3 py-2.5 
                 border border-[#2D2F45] rounded-xl text-gray-200 bg-[#252736] hover:bg-[#2D2F45] 
                 transition-all shadow-sm group focus:ring-2 focus:ring-primary focus:border-transparent"
                 aria-haspopup="listbox"
@@ -164,22 +164,21 @@ export default function RegisterForm() {
                 <div className="flex items-center gap-2">
                   {countryCodes.find((c) => c.code === selectedCountryCode)
                     ?.flag && (
-                    <span className="w-5">
-                      {React.createElement(
-                        countryCodes.find((c) => c.code === selectedCountryCode)
-                          .flag
-                      )}
-                    </span>
-                  )}
+                      <span className="w-5">
+                        {React.createElement(
+                          countryCodes.find((c) => c.code === selectedCountryCode)
+                            .flag
+                        )}
+                      </span>
+                    )}
                   <span className="text-sm font-medium">
                     {selectedCountryCode}
                   </span>
                 </div>
                 <FaChevronDown
                   className={`h-4 w-4 text-gray-400 transition-transform duration-300 
-                  group-hover:text-gray-600 ${
-                    showCountryDropdown ? "rotate-180" : ""
-                  }`}
+                  group-hover:text-gray-600 ${showCountryDropdown ? "rotate-180" : ""
+                    }`}
                 />
               </button>
               {showCountryDropdown && (
@@ -194,10 +193,9 @@ export default function RegisterForm() {
                     <li key={country.code}>
                       <button
                         onClick={() => handleCountryChange(country.code)}
-                        className={`w-full text-left px-4 py-3 text-sm hover:bg-muted transition-all duration-200
-                        flex items-center gap-3 ${
-                          selectedCountryCode === country.code ? "bg-muted" : ""
-                        }`}
+                        className={`w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-all duration-200
+                        flex items-center gap-3 ${selectedCountryCode === country.code ? "bg-muted" : ""
+                          }`}
                         role="option"
                       >
                         <span className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-base font-medium">
@@ -229,7 +227,7 @@ export default function RegisterForm() {
                   onChange={(e) =>
                     setFormData({ ...formData, phone: e.target.value })
                   }
-                  className="w-full px-4 py-3 pl-12 border border-[#2D2F45] bg-[#252736] text-white rounded-xl  
+                  className="w-full px-4 py-2.5 pl-12 border border-[#2D2F45] bg-[#252736] text-white rounded-xl  
                     focus:outline-none focus:ring-2 focus:ring-primary transition-all shadow-sm 
                   valid:border-green-500 invalid:border-red-500"
                 />
@@ -241,7 +239,7 @@ export default function RegisterForm() {
           </div>
 
           {/* Password Input */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="flex items-center gap-2 text-white font-semibold mb-2">
               <FaLock className="h-5 w-5 text-primary" />
               {t("form.password")}
@@ -254,7 +252,7 @@ export default function RegisterForm() {
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
-                className="w-full text-secondary px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm"
+                className="w-full text-secondary px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm"
               />
               <button
                 type="button"
@@ -271,7 +269,7 @@ export default function RegisterForm() {
           </div>
 
           {/* Confirm Password Input */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="flex items-center gap-2 text-white font-semibold mb-2">
               <FaLock className="h-5 w-5 text-primary" />
               {t("form.confirm_password")}
@@ -287,7 +285,7 @@ export default function RegisterForm() {
                     confirmPassword: e.target.value,
                   })
                 }
-                className="w-full px-4 py-3 text-secondary border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm"
+                className="w-full px-4 py-2.5 text-secondary border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm"
               />
               <button
                 type="button"
@@ -304,7 +302,7 @@ export default function RegisterForm() {
           </div>
 
           {/* Invite Code Input */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="flex items-center gap-2 text-white font-semibold mb-2">
               <FaUser className="h-5 w-5 text-primary" />
               {t("form.invite_code")}
@@ -312,7 +310,7 @@ export default function RegisterForm() {
             <input
               type="text"
               defaultValue="881671532114"
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm font-medium text-gray-600"
+              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm font-medium text-gray-600"
               readOnly
             />
           </div>
@@ -342,7 +340,7 @@ export default function RegisterForm() {
           {/* Register Button */}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-background py-4 rounded-full text-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="w-full bg-primary hover:from-accent hover:to-primary text-background py-3 rounded-full text-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
             disabled={isLoading}
           >
             {isLoading ? "Registering..." : t("form.register")}
@@ -351,7 +349,7 @@ export default function RegisterForm() {
           {/* Login Link */}
           <button
             type="button"
-            className="w-full border border-[#2D2F45] text-gray-300 py-4 rounded-full text-lg transition-all duration-300 flex items-center justify-center gap-2 hover:bg-[#252736]"
+            className="w-full border border-[#2D2F45] text-gray-300 py-3 rounded-full text-lg transition-all duration-300 flex items-center justify-center gap-2 hover:bg-[#252736]"
           >
             <span className="text-gray-400">{t("form.i_have_account")}</span>
             <Link to="/login" className="text-primary">
@@ -371,15 +369,14 @@ export default function RegisterForm() {
       <div className="mt-2">
         <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
           <div
-            className={`h-full transition-all duration-300 ${
-              passwordStrength === 0
-                ? "w-0"
-                : passwordStrength === 1
+            className={`h-full transition-all duration-300 ${passwordStrength === 0
+              ? "w-0"
+              : passwordStrength === 1
                 ? "w-1/3 bg-primary"
                 : passwordStrength === 2
-                ? "w-2/3 bg-accent"
-                : "w-full bg-success"
-            }`}
+                  ? "w-2/3 bg-accent"
+                  : "w-full bg-success"
+              }`}
           ></div>
         </div>
       </div>

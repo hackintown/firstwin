@@ -12,7 +12,10 @@ import { IoMdPhonePortrait } from "react-icons/io";
 import { GB, IN, US, AU, JP, CN } from "country-flag-icons/react/3x2";
 import { useTranslation } from "react-i18next";
 import Header from "../Common/Header";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginThunk } from "../../features/auth/authThunks";
+import { toast } from "react-toastify";
 
 const countryCodes = [
   {
@@ -57,10 +60,13 @@ export default function LoginForm() {
 
   const [formData, setFormData] = useState({
     phone: "",
-    email: "",
     password: "",
     rememberMe: false,
   });
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isLoading, error } = useSelector((state) => state.auth);
 
   // Handle country code change
   const handleCountryChange = (code) => {
@@ -68,9 +74,28 @@ export default function LoginForm() {
     setShowCountryDropdown(false);
   };
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login form submitted:", formData);
+
+    if (!formData.phone || !formData.password) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    try {
+      const payload = {
+        phone: formData.phone,
+        password: formData.password,
+      };
+
+      // Dispatch the login action
+      await dispatch(loginThunk(payload)).unwrap();
+      toast.success("Login successful!");
+      navigate("/dashboard");
+    } catch (err) {
+      toast.error(err || "Login failed");
+    }
   };
 
   return (
@@ -95,22 +120,20 @@ export default function LoginForm() {
         <div className="flex mb-8 border-b border-[#2D2F45]">
           <button
             onClick={() => setActiveTab("phone")}
-            className={`flex items-center justify-center gap-2 flex-1 pb-4 text-lg font-medium transition-all ${
-              activeTab === "phone"
+            className={`flex items-center justify-center gap-2 flex-1 pb-4 text-lg font-medium transition-all ${activeTab === "phone"
                 ? "text-primary border-b-2 border-primary"
                 : "text-gray-400 hover:text-gray-300"
-            }`}
+              }`}
           >
             <IoMdPhonePortrait className="h-5 w-5" />
             Phone Number
           </button>
           <button
             onClick={() => setActiveTab("email")}
-            className={`flex items-center justify-center gap-2 flex-1 pb-4 text-lg font-medium transition-all ${
-              activeTab === "email"
+            className={`flex items-center justify-center gap-2 flex-1 pb-4 text-lg font-medium transition-all ${activeTab === "email"
                 ? "text-primary border-b-2 border-primary"
                 : "text-gray-400 hover:text-gray-300"
-            }`}
+              }`}
           >
             <MdEmail className="h-5 w-5" />
             Email Login
@@ -141,23 +164,22 @@ export default function LoginForm() {
                   <div className="flex items-center gap-2">
                     {countryCodes.find((c) => c.code === selectedCountryCode)
                       ?.flag && (
-                      <span className="w-5">
-                        {React.createElement(
-                          countryCodes.find(
-                            (c) => c.code === selectedCountryCode
-                          ).flag
-                        )}
-                      </span>
-                    )}
+                        <span className="w-5">
+                          {React.createElement(
+                            countryCodes.find(
+                              (c) => c.code === selectedCountryCode
+                            ).flag
+                          )}
+                        </span>
+                      )}
                     <span className="text-sm font-medium">
                       {selectedCountryCode}
                     </span>
                   </div>
                   <FaChevronDown
                     className={`h-4 w-4 text-gray-400 transition-transform duration-300 
-                  group-hover:text-gray-600 ${
-                    showCountryDropdown ? "rotate-180" : ""
-                  }`}
+                  group-hover:text-gray-600 ${showCountryDropdown ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
                 {showCountryDropdown && (
@@ -173,9 +195,8 @@ export default function LoginForm() {
                         <button
                           onClick={() => handleCountryChange(country.code)}
                           className={`w-full text-left px-4 py-3 text-sm hover:bg-muted transition-all duration-200
-                        flex items-center gap-3 ${
-                          selectedCountryCode === country.code ? "bg-muted" : ""
-                        }`}
+                        flex items-center gap-3 ${selectedCountryCode === country.code ? "bg-muted" : ""
+                            }`}
                           role="option"
                         >
                           <span className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-base font-medium">
@@ -203,6 +224,8 @@ export default function LoginForm() {
                   <input
                     type="tel"
                     placeholder={t("form.phone_number_placeholder")}
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="w-full px-4 py-3 pl-12 border border-[#2D2F45] bg-[#252736] text-white rounded-xl  
                     focus:outline-none focus:ring-2 focus:ring-primary transition-all shadow-sm 
                   valid:border-green-500 invalid:border-red-500"
@@ -243,6 +266,8 @@ export default function LoginForm() {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="w-full px-4 py-3 pl-12 border border-[#2D2F45] bg-[#252736] text-white rounded-xl  
                 focus:outline-none focus:ring-2 focus:ring-primary transition-all shadow-sm"
               />
@@ -301,6 +326,9 @@ export default function LoginForm() {
               {t("form.register")}
             </Link>
           </button>
+
+          {/* Error Message */}
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         </form>
 
         {/* Customer Service Link */}

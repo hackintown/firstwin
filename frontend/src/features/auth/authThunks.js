@@ -7,7 +7,7 @@ export const loginThunk = createAsyncThunk(
     try {
       return await loginUser(userData);
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.response?.data?.message || "Login failed");
     }
   }
 );
@@ -18,7 +18,7 @@ export const registerThunk = createAsyncThunk(
     try {
       return await registerUser(userData);
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.response?.data?.message || "Registration failed");
     }
   }
 );
