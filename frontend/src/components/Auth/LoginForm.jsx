@@ -90,9 +90,15 @@ export default function LoginForm() {
       };
 
       // Dispatch the login action
-      await dispatch(loginThunk(payload)).unwrap();
+      const response = await dispatch(loginThunk(payload)).unwrap();
       toast.success("Login successful!");
-      navigate("/dashboard");
+
+      // Navigate to dashboard based on role
+      if (response.user.role === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err) {
       toast.error(err || "Login failed");
     }
@@ -107,22 +113,22 @@ export default function LoginForm() {
       <Header />
 
       <div className="relative px-6 pt-6 pb-6 text-foreground">
-        <h2 className="text-2xl font-bold mb-2 drop-shadow-lg text-primary">
+        <h2 className="text-2xl font-medium mb-2 drop-shadow-lg text-tertiary-foreground">
           {t("header.login")}
         </h2>
-        <p className="text-base text-foreground/80 font-light">
+        <p className="text-sm text-foreground font-light">
           Please log in with your phone number or email
         </p>
       </div>
 
-      <div className="relative bg-[#1A1C2C]/95 backdrop-blur-xl rounded-t-[2.5rem] min-h-screen p-6 shadow-2xl">
+      <div className="relative bg-background border border-border backdrop-blur-xl rounded-t-[2.5rem] min-h-screen p-6 shadow-2xl">
         {/* Login Tabs */}
         <div className="flex mb-8 border-b border-[#2D2F45]">
           <button
             onClick={() => setActiveTab("phone")}
             className={`flex items-center justify-center gap-2 flex-1 pb-4 text-lg font-medium transition-all ${activeTab === "phone"
-                ? "text-primary border-b-2 border-primary"
-                : "text-gray-400 hover:text-gray-300"
+              ? "text-primary border-b-2 border-primary"
+              : "text-gray-400 hover:text-gray-300"
               }`}
           >
             <IoMdPhonePortrait className="h-5 w-5" />
@@ -131,8 +137,8 @@ export default function LoginForm() {
           <button
             onClick={() => setActiveTab("email")}
             className={`flex items-center justify-center gap-2 flex-1 pb-4 text-lg font-medium transition-all ${activeTab === "email"
-                ? "text-primary border-b-2 border-primary"
-                : "text-gray-400 hover:text-gray-300"
+              ? "text-primary border-b-2 border-primary"
+              : "text-gray-400 hover:text-gray-300"
               }`}
           >
             <MdEmail className="h-5 w-5" />
@@ -144,7 +150,7 @@ export default function LoginForm() {
           {/* Conditional Input Field */}
           {activeTab === "phone" ? (
             <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-200 font-semibold mb-2">
+              <label className="flex items-center gap-2 text-gray-200 font-medium mb-2">
                 <FaPhone className="h-5 w-5 text-primary" />
                 {t("form.phone_number")}
               </label>
@@ -155,7 +161,7 @@ export default function LoginForm() {
                 <button
                   type="button"
                   onClick={() => setShowCountryDropdown(!showCountryDropdown)}
-                  className="flex items-center justify-between gap-2 w-[120px] px-3 py-3 
+                  className="flex items-center justify-between gap-2 w-[120px] px-3 py-2.5 
                 border border-[#2D2F45] rounded-xl text-gray-200 bg-[#252736] hover:bg-[#2D2F45] 
                 transition-all shadow-sm group focus:ring-2 focus:ring-primary focus:border-transparent"
                   aria-haspopup="listbox"
@@ -194,7 +200,7 @@ export default function LoginForm() {
                       <li key={country.code}>
                         <button
                           onClick={() => handleCountryChange(country.code)}
-                          className={`w-full text-left px-4 py-3 text-sm hover:bg-muted transition-all duration-200
+                          className={`w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-all duration-200
                         flex items-center gap-3 ${selectedCountryCode === country.code ? "bg-muted" : ""
                             }`}
                           role="option"
@@ -226,7 +232,7 @@ export default function LoginForm() {
                     placeholder={t("form.phone_number_placeholder")}
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-3 pl-12 border border-[#2D2F45] bg-[#252736] text-white rounded-xl  
+                    className="w-full px-4 py-2.5 pl-12 border border-[#2D2F45] bg-[#252736] text-white rounded-xl  
                     focus:outline-none focus:ring-2 focus:ring-primary transition-all shadow-sm 
                   valid:border-green-500 invalid:border-red-500"
                   />
@@ -238,7 +244,7 @@ export default function LoginForm() {
             </div>
           ) : (
             <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-200 font-semibold mb-2">
+              <label className="flex items-center gap-2 text-gray-200 font-medium mb-2">
                 <MdEmail className="h-5 w-5 text-primary" />
                 Email Address
               </label>
@@ -246,7 +252,7 @@ export default function LoginForm() {
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full px-4 py-3 pl-12 border border-[#2D2F45] bg-[#252736] text-white rounded-xl  
+                  className="w-full px-4 py-2.5 pl-12 border border-[#2D2F45] bg-[#252736] text-white rounded-xl  
                     focus:outline-none focus:ring-2 focus:ring-primary transition-all shadow-sm"
                 />
                 <div className="absolute left-4 top-1/2 -translate-y-1/2">
@@ -258,7 +264,7 @@ export default function LoginForm() {
 
           {/* Password Input */}
           <div className="space-y-2">
-            <label className="flex items-center gap-2 text-gray-200 font-semibold mb-2">
+            <label className="flex items-center gap-2 text-gray-200 font-medium mb-2">
               <FaLock className="h-5 w-5 text-primary" />
               Password
             </label>
@@ -268,7 +274,7 @@ export default function LoginForm() {
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-4 py-3 pl-12 border border-[#2D2F45] bg-[#252736] text-white rounded-xl  
+                className="w-full px-4 py-2.5 pl-12 border border-[#2D2F45] bg-[#252736] text-white rounded-xl  
                 focus:outline-none focus:ring-2 focus:ring-primary transition-all shadow-sm"
               />
               <div className="absolute left-4 top-1/2 -translate-y-1/2">
@@ -308,8 +314,8 @@ export default function LoginForm() {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary 
-            text-background py-4 rounded-full text-xl font-medium transition-all duration-300 
+            className="w-full bg-primary hover:from-accent hover:to-primary 
+            text-background py-3 rounded-full text-xl font-medium transition-all duration-300 
             shadow-lg hover:shadow-xl"
           >
             {t("form.login")}
@@ -318,7 +324,7 @@ export default function LoginForm() {
           {/* Register Link */}
           <button
             type="button"
-            className="w-full border border-[#2D2F45] text-gray-300 py-4 rounded-full text-lg 
+            className="w-full border border-[#2D2F45] text-gray-300 py-3 rounded-full text-lg 
             transition-all duration-300 flex items-center justify-center gap-2 hover:bg-[#252736]"
           >
             <span className="text-gray-400">Don't have an account?</span>

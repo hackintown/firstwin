@@ -11,6 +11,7 @@ import AuthGuard from "./components/Auth/AuthGuard";
 import NotFound from "./pages/NotFound";
 import Loader from "./components/Common/Loader";
 import { useSelector } from "react-redux";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   const { isLoading } = useSelector((state) => state.auth);
@@ -28,12 +29,19 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <AuthGuard roles={["admin", "user"]}>
+            <AuthGuard roles={["user"]}>
               <Dashboard />
             </AuthGuard>
           }
         />
-
+        <Route
+          path="/admin-dashboard"
+          element={
+            <AuthGuard roles={["admin"]}>
+              <AdminDashboard />
+            </AuthGuard>
+          }
+        />
         {/* 404 Route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
