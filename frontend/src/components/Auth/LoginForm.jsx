@@ -74,7 +74,6 @@ export default function LoginForm() {
     setShowCountryDropdown(false);
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -92,6 +91,7 @@ export default function LoginForm() {
       // Dispatch the login action
       const response = await dispatch(loginThunk(payload)).unwrap();
       toast.success("Login successful!");
+      navigate("/dashboard");
 
       // Navigate to dashboard based on role
       if (response.user.role === "admin") {
@@ -126,20 +126,22 @@ export default function LoginForm() {
         <div className="flex mb-8 border-b border-[#2D2F45]">
           <button
             onClick={() => setActiveTab("phone")}
-            className={`flex items-center justify-center gap-2 flex-1 pb-4 text-lg font-medium transition-all ${activeTab === "phone"
-              ? "text-primary border-b-2 border-primary"
-              : "text-gray-400 hover:text-gray-300"
-              }`}
+            className={`flex items-center justify-center gap-2 flex-1 pb-4 text-lg font-medium transition-all ${
+              activeTab === "phone"
+                ? "text-primary border-b-2 border-primary"
+                : "text-gray-400 hover:text-gray-300"
+            }`}
           >
             <IoMdPhonePortrait className="h-5 w-5" />
             Phone Number
           </button>
           <button
             onClick={() => setActiveTab("email")}
-            className={`flex items-center justify-center gap-2 flex-1 pb-4 text-lg font-medium transition-all ${activeTab === "email"
-              ? "text-primary border-b-2 border-primary"
-              : "text-gray-400 hover:text-gray-300"
-              }`}
+            className={`flex items-center justify-center gap-2 flex-1 pb-4 text-lg font-medium transition-all ${
+              activeTab === "email"
+                ? "text-primary border-b-2 border-primary"
+                : "text-gray-400 hover:text-gray-300"
+            }`}
           >
             <MdEmail className="h-5 w-5" />
             Email Login
@@ -170,22 +172,23 @@ export default function LoginForm() {
                   <div className="flex items-center gap-2">
                     {countryCodes.find((c) => c.code === selectedCountryCode)
                       ?.flag && (
-                        <span className="w-5">
-                          {React.createElement(
-                            countryCodes.find(
-                              (c) => c.code === selectedCountryCode
-                            ).flag
-                          )}
-                        </span>
-                      )}
+                      <span className="w-5">
+                        {React.createElement(
+                          countryCodes.find(
+                            (c) => c.code === selectedCountryCode
+                          ).flag
+                        )}
+                      </span>
+                    )}
                     <span className="text-sm font-medium">
                       {selectedCountryCode}
                     </span>
                   </div>
                   <FaChevronDown
                     className={`h-4 w-4 text-gray-400 transition-transform duration-300 
-                  group-hover:text-gray-600 ${showCountryDropdown ? "rotate-180" : ""
-                      }`}
+                  group-hover:text-gray-600 ${
+                    showCountryDropdown ? "rotate-180" : ""
+                  }`}
                   />
                 </button>
                 {showCountryDropdown && (
@@ -201,8 +204,9 @@ export default function LoginForm() {
                         <button
                           onClick={() => handleCountryChange(country.code)}
                           className={`w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-all duration-200
-                        flex items-center gap-3 ${selectedCountryCode === country.code ? "bg-muted" : ""
-                            }`}
+                        flex items-center gap-3 ${
+                          selectedCountryCode === country.code ? "bg-muted" : ""
+                        }`}
                           role="option"
                         >
                           <span className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-base font-medium">
@@ -231,7 +235,9 @@ export default function LoginForm() {
                     type="tel"
                     placeholder={t("form.phone_number_placeholder")}
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
                     className="w-full px-4 py-2.5 pl-12 border border-[#2D2F45] bg-[#252736] text-white rounded-xl  
                     focus:outline-none focus:ring-2 focus:ring-primary transition-all shadow-sm 
                   valid:border-green-500 invalid:border-red-500"
@@ -273,7 +279,9 @@ export default function LoginForm() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
                 className="w-full px-4 py-2.5 pl-12 border border-[#2D2F45] bg-[#252736] text-white rounded-xl  
                 focus:outline-none focus:ring-2 focus:ring-primary transition-all shadow-sm"
               />

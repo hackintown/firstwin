@@ -11,8 +11,35 @@
 body {
   background-color: #9195a3;
   font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+/* Container for app-like layout */
+.container {
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
 }
 
+/* Mobile-first container */
+.max-w-md {
+  @apply w-full mx-auto;
+  max-width: 400px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+    border-radius: 0;
+  }
+}
 :root {
   /* Backgrounds */
   --background: 250, 15%, 15%; /* Deep Charcoal */
@@ -97,6 +124,26 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Swiper-Custom-CSS */
+.swiper-pagination-bullet {
+  width: 8px !important;
+  height: 8px !important;
+  margin: 0 4px !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+  opacity: 1 !important;
+  transition: all 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+  width: 24px !important;
+  background: #3b82f6 !important; /* blue-500 */
+  border-radius: 4px !important;
+}
+
+.swiper-pagination {
+  bottom: -5px !important;
 }
 
 /* Color Usage Guide:

@@ -4,9 +4,11 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1rem",
       screens: {
-        "2xl": "1200px",
+        sm: "640px",
+        md: "768px",
+        lg: "450px", // Limit max-width for app-like layout
       },
     },
     extend: {
