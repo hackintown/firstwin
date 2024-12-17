@@ -2,28 +2,29 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-const AuthGuard = ({ children, roles }) => {
+const AuthGuard = ({ children, roles = [] }) => {
   const navigate = useNavigate();
-  const { user, token } = useSelector((state) => state.auth);
+  const { token, role } = useSelector((state) => state.auth); // Extract token and role from Redux state
 
   useEffect(() => {
     if (!token) {
-      // Not logged in, redirect to login page
+      // If the user is not logged in, redirect to login page
       navigate("/login");
       return;
     }
 
-    // Check if user has required role
-    if (roles && roles.length > 0) {
-      if (!user || !roles.includes(user.role)) {
-        // Role not authorized, redirect to home page
-        navigate("/");
-        return;
-      }
+    // If roles are specified, check if the user's role is authorized
+    if (roles.length > 0 && !roles.includes(role)) {
+      // Role not authorized, redirect to a "Not Authorized" page or home
+      navigate("/not-found");
+      return;
     }
-  }, [navigate, roles, token, user]);
+  }, [navigate, roles, token, role]);
 
-  return children;
+  // Render the children components if authorized
+  return token && (roles.length === 0 || roles.includes(role)) ? (
+    children
+  ) : null;
 };
 
 export default AuthGuard;

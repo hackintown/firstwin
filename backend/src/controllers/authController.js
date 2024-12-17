@@ -4,7 +4,7 @@ import generateToken from "../utils/generateToken.js";
 // Register User
 export const registerUser = async (req, res, next) => {
   try {
-    const { phone, email, password, countryCode, agreeToTerms } = req.body;
+    const { phone, password, countryCode, agreeToTerms } = req.body;
 
     // Check if user exists
     if (phone && (await User.findOne({ phone }))) {
@@ -17,7 +17,6 @@ export const registerUser = async (req, res, next) => {
     // Create user
     const user = await User.create({
       phone,
-      email,
       password,
       countryCode,
       agreeToTerms,
@@ -27,7 +26,6 @@ export const registerUser = async (req, res, next) => {
       res.status(201).json({
         _id: user._id,
         phone: user.phone,
-        email: user.email,
         countryCode: user.countryCode,
         token: generateToken(user._id),
       });
@@ -42,17 +40,14 @@ export const registerUser = async (req, res, next) => {
 // Login User
 export const loginUser = async (req, res, next) => {
   try {
-    const { phone, email, password } = req.body;
+    const { phone, password } = req.body;
 
-    const user = phone
-      ? await User.findOne({ phone })
-      : await User.findOne({ email });
+    const user = await User.findOne({ phone });
 
     if (user && (await user.matchPassword(password))) {
       res.status(200).json({
         _id: user._id,
         phone: user.phone,
-        email: user.email,
         countryCode: user.countryCode,
         token: generateToken(user._id),
       });
