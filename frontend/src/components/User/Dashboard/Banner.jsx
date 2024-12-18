@@ -41,10 +41,10 @@ export default function Banner() {
         }}
         pagination={{
           clickable: true,
-          bulletClass: `swiper-pagination-bullet`,
-          bulletActiveClass: `swiper-pagination-bullet-active`,
+          bulletClass: 'swiper-pagination-bullet !w-2.5 !h-2.5 !bg-gray-300 !opacity-70',
+          bulletActiveClass: 'swiper-pagination-bullet-active !bg-white !opacity-100',
         }}
-        className="rounded-xl shadow-lg"
+        className="rounded-xl overflow-hidden"
         keyboard={{ enabled: true }}
         breakpoints={{
           640: {
@@ -63,11 +63,11 @@ export default function Banner() {
       >
         {banners.map((banner) => (
           <SwiperSlide key={banner.id}>
-            <div className="relative w-full h-[232px]">
+            <div className="relative w-full h-full">
               <img
                 src={banner.image}
                 alt={`Banner ${banner.id}`}
-                className="w-full h-full object-contain rounded-xl"
+                className="w-full h-full object-cover rounded-xl"
                 loading="lazy"
                 decoding="async"
               />

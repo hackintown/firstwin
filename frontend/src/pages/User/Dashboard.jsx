@@ -1,11 +1,13 @@
 import React from "react";
 import Banner from "../../components/User/Dashboard/Banner";
+import NoticeBar from "../../components/User/Dashboard/NoticeBar";
 const Dashboard = () => {
   return (
     <div className="flex flex-col py-4">
       <Banner />
+      <NoticeBar />
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-800">Welcome Back!</h1>
+        <h1 className="text-2xl font-bold text-foreground">Welcome Back!</h1>
         <div className="h-10 w-10 rounded-full bg-gray-200">
           {/* User avatar placeholder */}
         </div>
