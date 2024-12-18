@@ -9,7 +9,7 @@ export default function Banner() {
     {
       id: 1,
       image:
-        "https://ossimg.dmwinimage.com/DmWin/banner/Banner_20241028195902fwc4.png",
+        "https://ossimg.cmdgametransit.com/OK.Win/banner/Banner_202408222005512cve.png",
     },
     {
       id: 2,
@@ -26,6 +26,21 @@ export default function Banner() {
       image:
         "https://ossimg.dmwinimage.com/DmWin/banner/Banner_202410282011415eqk.png",
     },
+    {
+      id: 5,
+      image:
+        "https://ossimg.cmdgametransit.com/OK.Win/banner/Banner_20240830184550aybu.png",
+    },
+    {
+      id: 6,
+      image:
+        "https://ossimg.cmdgametransit.com/OK.Win/banner/Banner_20240824180844rdn3.png",
+    },
+    {
+      id: 7,
+      image:
+        "https://ossimg.dmwinimage.com/DmWin/banner/Banner_20241028195902fwc4.png",
+    },
   ];
 
   return (
@@ -41,8 +56,10 @@ export default function Banner() {
         }}
         pagination={{
           clickable: true,
-          bulletClass: 'swiper-pagination-bullet !w-2.5 !h-2.5 !bg-gray-300 !opacity-70',
-          bulletActiveClass: 'swiper-pagination-bullet-active !bg-white !opacity-100',
+          bulletClass:
+            "swiper-pagination-bullet !w-2.5 !h-2.5 !bg-gray-300 !opacity-70",
+          bulletActiveClass:
+            "swiper-pagination-bullet-active !bg-white !opacity-100",
         }}
         className="rounded-xl overflow-hidden"
         keyboard={{ enabled: true }}

@@ -1,4 +1,5 @@
-import { FaHome, FaGamepad, FaGift, FaUser, FaWallet } from "react-icons/fa";
+import { FaHome, FaGift, FaUser, FaWallet } from "react-icons/fa";
+import { IoGameController } from "react-icons/io5";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -9,7 +10,7 @@ export default function TabBar() {
     { icon: <FaHome size={24} />, label: "Promotion", path: "#" },
     { icon: <FaGift size={24} />, label: "Activity", path: "#" },
     {
-      icon: <FaGamepad size={40} />,
+      icon: <IoGameController size={40} />,
       label: "",
       path: "#",
       isGameTab: true,
@@ -31,7 +32,7 @@ export default function TabBar() {
                     : "text-gray-400 hover:text-primary"
                 } ${
                   tab.isGameTab
-                    ? "bg-primary text-primary-foreground hover:text-primary-foreground p-3 rounded-3xl -mt-6"
+                    ? "bg-primary text-primary-foreground hover:text-primary-foreground p-3 rounded-full -mt-6"
                     : ""
                 }`}
                 whileHover={{ y: -4 }}
@@ -45,9 +46,11 @@ export default function TabBar() {
                   />
                 )}
                 {tab.icon}
-                <span className="text-[10px] font-medium tracking-wide">
-                  {tab.label}
-                </span>
+                {tab.label && (
+                  <span className="text-[10px] font-medium tracking-wide">
+                    {tab.label}
+                  </span>
+                )}
               </motion.div>
             </Link>
           ))}
