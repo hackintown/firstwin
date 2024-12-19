@@ -37,7 +37,7 @@ const Lottery = () => {
       </div>
 
       {/* Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {lotteryData.map((item) => (
           <Card key={item.id}>
             <img

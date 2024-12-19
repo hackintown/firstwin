@@ -6,12 +6,12 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      disable: process.env.NODE_ENV === "development",
-      registerType: "autoUpdate",
-      includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
+      disable: process.env.NODE_ENV === "development", // Disable PWA in development
+      registerType: "autoUpdate", // Automatically update the PWA when a new version is available
+      includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"], // Additional assets
       manifest: {
-        name: "Big Daddy Color Prediction",
-        short_name: "Big Daddy",
+        name: "First Win Color Prediction",
+        short_name: "First Win",
         description: "Color Prediction Betting App",
         theme_color: "#ffffff",
         background_color: "#000000",
@@ -33,55 +33,65 @@ export default defineConfig({
           },
         ],
       },
-      strategies: "generateSW",
+      strategies: "generateSW", // Use GenerateSW strategy for automatic service worker
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg}"],
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/firstwin\.vercel\.app\/api\/.*/,
-            handler: "NetworkFirst",
+            urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
+            handler: 'NetworkFirst',
             options: {
-              cacheName: "api-cache",
+              cacheName: 'api-cache',
               networkTimeoutSeconds: 5,
               cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
+                statuses: [0, 200]
+              }
+            }
           },
           {
-            urlPattern: /\.(?:png|jpg|jpeg|svg|gif)$/,
-            handler: "CacheFirst",
+            urlPattern: ({ request }) => request.destination === 'image',
+            handler: 'CacheFirst',
             options: {
-              cacheName: "images",
+              cacheName: 'images',
               expiration: {
                 maxEntries: 60,
-                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
-              },
-            },
+                maxAgeSeconds: 30 * 24 * 60 * 60
+              }
+            }
           },
           {
-            urlPattern: /\.(?:js|css)$/,
-            handler: "StaleWhileRevalidate",
+            urlPattern: ({ request }) => 
+              request.destination === 'script' || 
+              request.destination === 'style',
+            handler: 'StaleWhileRevalidate',
             options: {
-              cacheName: "static-resources",
-            },
-          },
-        ],
+              cacheName: 'static-resources'
+            }
+          }
+        ]
       },
       devOptions: {
-        enabled: true,
+        enabled: true, // Enable service worker in development for testing
         type: "module",
       },
     }),
   ],
-  // Server configuration
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:5000",
+        target: "http://localhost:5000", // Proxy API requests to backend
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, "/api"),
+      },
+    },
+  },
+  build: {
+    chunkSizeWarningLimit: 600, // Increase chunk size limit
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'], // Separate vendor libraries into their own chunk
+        },
       },
     },
   },
