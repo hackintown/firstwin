@@ -122,7 +122,7 @@ export default function RegisterForm() {
       <Header />
       {/* Title Section */}
       <div className="relative px-4 pt-4 pb-8 text-foreground">
-        <h2 className="text-2xl font-medium mb-1 drop-shadow-lg text-tertiary-foreground">
+        <h2 className="text-2xl font-medium mb-1 drop-shadow-lg text-foreground">
           {t("header.register_now")}
         </h2>
         <p className="text-sm text-foreground font-light">
@@ -164,21 +164,22 @@ export default function RegisterForm() {
                 <div className="flex items-center gap-2">
                   {countryCodes.find((c) => c.code === selectedCountryCode)
                     ?.flag && (
-                      <span className="w-5">
-                        {React.createElement(
-                          countryCodes.find((c) => c.code === selectedCountryCode)
-                            .flag
-                        )}
-                      </span>
-                    )}
+                    <span className="w-5">
+                      {React.createElement(
+                        countryCodes.find((c) => c.code === selectedCountryCode)
+                          .flag
+                      )}
+                    </span>
+                  )}
                   <span className="text-sm font-medium">
                     {selectedCountryCode}
                   </span>
                 </div>
                 <FaChevronDown
                   className={`h-4 w-4 text-gray-400 transition-transform duration-300 
-                  group-hover:text-gray-600 ${showCountryDropdown ? "rotate-180" : ""
-                    }`}
+                  group-hover:text-gray-600 ${
+                    showCountryDropdown ? "rotate-180" : ""
+                  }`}
                 />
               </button>
               {showCountryDropdown && (
@@ -194,8 +195,9 @@ export default function RegisterForm() {
                       <button
                         onClick={() => handleCountryChange(country.code)}
                         className={`w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-all duration-200
-                        flex items-center gap-3 ${selectedCountryCode === country.code ? "bg-muted" : ""
-                          }`}
+                        flex items-center gap-3 ${
+                          selectedCountryCode === country.code ? "bg-muted" : ""
+                        }`}
                         role="option"
                       >
                         <span className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-base font-medium">
@@ -369,14 +371,15 @@ export default function RegisterForm() {
       <div className="mt-2">
         <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
           <div
-            className={`h-full transition-all duration-300 ${passwordStrength === 0
-              ? "w-0"
-              : passwordStrength === 1
+            className={`h-full transition-all duration-300 ${
+              passwordStrength === 0
+                ? "w-0"
+                : passwordStrength === 1
                 ? "w-1/3 bg-primary"
                 : passwordStrength === 2
-                  ? "w-2/3 bg-accent"
-                  : "w-full bg-success"
-              }`}
+                ? "w-2/3 bg-accent"
+                : "w-full bg-success"
+            }`}
           ></div>
         </div>
       </div>

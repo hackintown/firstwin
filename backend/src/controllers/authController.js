@@ -10,15 +10,13 @@ export const registerUser = async (req, res, next) => {
     if (phone && (await User.findOne({ phone }))) {
       return res.status(400).json({ message: "Phone already registered" });
     }
-    if (email && (await User.findOne({ email }))) {
-      return res.status(400).json({ message: "Email already registered" });
-    }
 
     // Create user
     const user = await User.create({
       phone,
       password,
       countryCode,
+      role: "user",
       agreeToTerms,
     });
 
@@ -27,6 +25,7 @@ export const registerUser = async (req, res, next) => {
         _id: user._id,
         phone: user.phone,
         countryCode: user.countryCode,
+        role: user.role,
         token: generateToken(user._id),
       });
     } else {
@@ -46,9 +45,12 @@ export const loginUser = async (req, res, next) => {
 
     if (user && (await user.matchPassword(password))) {
       res.status(200).json({
-        _id: user._id,
-        phone: user.phone,
-        countryCode: user.countryCode,
+        user: {
+          _id: user._id,
+          phone: user.phone,
+          countryCode: user.countryCode,
+          role: user.role || "user",
+        },
         token: generateToken(user._id),
       });
     } else {

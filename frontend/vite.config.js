@@ -35,40 +35,42 @@ export default defineConfig({
       },
       strategies: "generateSW", // Use GenerateSW strategy for automatic service worker
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg}"],
+        globPatterns: ["**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2}"],
+        navigateFallback: "/index.html",
+        navigateFallbackAllowlist: [/^(?!\/__).*/],
         runtimeCaching: [
           {
-            urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
-            handler: 'NetworkFirst',
+            urlPattern: /^https:\/\/api\.yourbackend\.com\/.*/i,
+            handler: "NetworkFirst",
             options: {
-              cacheName: 'api-cache',
-              networkTimeoutSeconds: 5,
+              cacheName: "api-cache",
+              networkTimeoutSeconds: 10,
               cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
+                statuses: [0, 200],
+              },
+            },
           },
           {
-            urlPattern: ({ request }) => request.destination === 'image',
-            handler: 'CacheFirst',
+            urlPattern: ({ request }) => request.destination === "image",
+            handler: "CacheFirst",
             options: {
-              cacheName: 'images',
+              cacheName: "images",
               expiration: {
                 maxEntries: 60,
-                maxAgeSeconds: 30 * 24 * 60 * 60
-              }
-            }
+                maxAgeSeconds: 30 * 24 * 60 * 60,
+              },
+            },
           },
           {
-            urlPattern: ({ request }) => 
-              request.destination === 'script' || 
-              request.destination === 'style',
-            handler: 'StaleWhileRevalidate',
+            urlPattern: ({ request }) =>
+              request.destination === "script" ||
+              request.destination === "style",
+            handler: "StaleWhileRevalidate",
             options: {
-              cacheName: 'static-resources'
-            }
-          }
-        ]
+              cacheName: "static-resources",
+            },
+          },
+        ],
       },
       devOptions: {
         enabled: true, // Enable service worker in development for testing
@@ -84,15 +86,21 @@ export default defineConfig({
         secure: false,
       },
     },
+    historyApiFallback: true,
   },
   build: {
     chunkSizeWarningLimit: 600, // Increase chunk size limit
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'], // Separate vendor libraries into their own chunk
+          vendor: ["react", "react-dom"], // Separate vendor libraries into their own chunk
         },
       },
     },
+  },
+  preview: {
+    port: 5173,
+    strictPort: true,
+    historyApiFallback: true,
   },
 });

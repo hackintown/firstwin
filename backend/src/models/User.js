@@ -9,12 +9,6 @@ const userSchema = new mongoose.Schema(
       sparse: true,
       match: [/^\d{10,15}$/, "Invalid phone number"],
     },
-    // email: {
-    //   type: String,
-    //   unique: true,
-    //   sparse: true,
-    //   match: [/.+@.+\..+/, "Invalid email address"],
-    // },
     password: {
       type: String,
       required: true,
@@ -22,6 +16,11 @@ const userSchema = new mongoose.Schema(
     countryCode: {
       type: String,
       required: true,
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
     },
     agreeToTerms: {
       type: Boolean,

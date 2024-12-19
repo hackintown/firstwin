@@ -91,11 +91,10 @@ export default function LoginForm() {
       // Dispatch the login action
       const response = await dispatch(loginThunk(payload)).unwrap();
       toast.success("Login successful!");
-      navigate("/dashboard");
 
-      // Navigate to dashboard based on role
+      // Navigate based on user role
       if (response.user.role === "admin") {
-        navigate("/admin-dashboard");
+        navigate("/admin/dashboard");
       } else {
         navigate("/dashboard");
       }
@@ -103,7 +102,6 @@ export default function LoginForm() {
       toast.error(err || "Login failed");
     }
   };
-
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden max-w-[400px] mx-auto">
       <div className="absolute inset-0 opacity-5">
@@ -113,7 +111,7 @@ export default function LoginForm() {
       <Header />
 
       <div className="relative px-6 pt-6 pb-6 text-foreground">
-        <h2 className="text-2xl font-medium mb-2 drop-shadow-lg text-tertiary-foreground">
+        <h2 className="text-2xl font-medium mb-2 drop-shadow-lg text-foreground">
           {t("header.login")}
         </h2>
         <p className="text-sm text-foreground font-light">

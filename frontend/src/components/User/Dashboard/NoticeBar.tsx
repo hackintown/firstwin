@@ -39,7 +39,7 @@ export default function NoticeBar() {
     <div className="rounded-3xl my-6 overflow-hidden bg-notice shadow-sm">
       <div className="px-2 grid grid-cols-[auto_1fr_auto] gap-x-2 w-full items-center">
         <div className="flex items-center">
-          <HiSpeakerWave className="h-5 w-5 text-primary" />
+          <HiSpeakerWave className="h-5 w-5 text-tertiary" />
         </div>
 
         <div className="overflow-hidden h-[40px]">
@@ -65,7 +65,7 @@ export default function NoticeBar() {
 
         <button
           onClick={handleDetailClick}
-          className="px-4 py-1 text-sm text-primary-foreground bg-primary rounded-3xl hover:bg-primary/90 transition-colors"
+          className="px-4 py-1 text-sm text-tertiary-foreground bg-tertiary rounded-3xl transition-colors"
         >
           Detail
         </button>

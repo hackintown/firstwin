@@ -3,7 +3,7 @@ import { IoGameController } from "react-icons/io5";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
-export default function TabBar() {
+export default function BottomNav() {
   const location = useLocation();
 
   const tabs = [

@@ -13,6 +13,8 @@ import { useSelector } from "react-redux";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import Dashboard from "./pages/User/Dashboard";
 import UserLayout from "./layouts/UserLayout";
+import Unauthorized from "./pages/Unauthorized";
+import AdminLayout from "./layouts/AdminLayout";
 
 function App() {
   const { isLoading } = useSelector((state) => state.auth);
@@ -26,30 +28,47 @@ function App() {
           {/* Public Routes */}
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* Protected Routes */}
+          {/* Protected User Routes */}
           <Route
-            path="/dashboard"
             element={
-              // <AuthGuard roles={["user"]}>
-              <UserLayout>
-                <Dashboard />
-              </UserLayout>
-              // </AuthGuard>
-            }
-          />
-          <Route
-            path="/admin-dashboard"
-            element={
-              <AuthGuard roles={["admin"]}>
-                <AdminDashboard />
+              <AuthGuard roles={["user", "admin"]}>
+                <UserLayout />
               </AuthGuard>
             }
-          />
+          >
+            <Route path="/" element={<Dashboard />} />
+          </Route>
+
+          {/* Protected Admin Routes */}
+          <Route
+            element={
+              <AuthGuard roles={["admin"]}>
+                <AdminLayout />
+              </AuthGuard>
+            }
+          >
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          </Route>
+
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </I18nextProvider>
+      <button
+        id="install-app"
+        style={{
+          display: "none", // Hidden by default
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          zIndex: 1000,
+        }}
+        className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg"
+      >
+        Install App
+      </button>
     </div>
   );
 }

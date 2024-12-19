@@ -5,6 +5,7 @@
   "description": "Color Prediction Betting App",
   "start_url": "/",
   "scope": "/",
+  "display_override": ["fullscreen", "minimal-ui"],
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
@@ -37,6 +38,11 @@
       "src": "/favicon-16x16.png",
       "sizes": "16x16",
       "type": "image/png"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16",
+      "type": "image/x-icon"
     }
   ]
 }
