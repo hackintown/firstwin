@@ -96,7 +96,7 @@ export default function LoginForm() {
       if (response.user.role === "admin") {
         navigate("/admin/dashboard");
       } else {
-        navigate("/dashboard");
+        navigate("/");
       }
     } catch (err) {
       toast.error(err || "Login failed");

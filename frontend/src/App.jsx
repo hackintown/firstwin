@@ -15,6 +15,7 @@ import Dashboard from "./pages/User/Dashboard";
 import UserLayout from "./layouts/UserLayout";
 import Unauthorized from "./pages/Unauthorized";
 import AdminLayout from "./layouts/AdminLayout";
+import PWAPrompt from "./components/PWAPrompt";
 
 function App() {
   const { isLoading } = useSelector((state) => state.auth);
@@ -69,6 +70,7 @@ function App() {
       >
         Install App
       </button>
+      <PWAPrompt />
     </div>
   );
 }

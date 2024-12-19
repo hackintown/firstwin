@@ -5,12 +5,29 @@
   "description": "Color Prediction Betting App",
   "start_url": "/",
   "scope": "/",
-  "display_override": ["fullscreen", "minimal-ui"],
   "display": "standalone",
-  "orientation": "portrait",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "any",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "prefer_related_applications": false,
+  "categories": ["games", "entertainment"],
+  "screenshots": [
+    {
+      "src": "/screenshot1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Homescreen of First Win"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Play Game",
+      "url": "/",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ],
   "icons": [
     {
       "src": "/icon-192x192.png",
