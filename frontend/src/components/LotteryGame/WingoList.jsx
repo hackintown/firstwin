@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { cn } from "../../lib/utils";
 
-const WingoList = () => {
+const WingoList = ({ onTabChange }) => {
+  const [activeTab, setActiveTab] = useState(30);
   const wingoCategories = [
-    { id: 1, name: "Win Go", time: "30s", isActive: true },
-    { id: 2, name: "Win Go", time: "1Min", isActive: false },
-    { id: 3, name: "Win Go", time: "3Min", isActive: false },
-    { id: 4, name: "Win Go", time: "5Min", isActive: false },
+    { id: 1, name: "Win Go", time: 30, isActive: activeTab === 30 },
+    { id: 2, name: "Win Go", time: 60, isActive: activeTab === 60 },
+    { id: 3, name: "Win Go", time: 180, isActive: activeTab === 180 },
+    { id: 4, name: "Win Go", time: 300, isActive: activeTab === 300 },
   ];
+
+  const handleTabClick = (time) => {
+    setActiveTab(time);
+    onTabChange(time);
+  };
 
   return (
     <div className="bg-card rounded-xl">
-      <div className="grid grid-cols-2 sm:grid-cols-4">
+      <div className="grid grid-cols-4">
         {wingoCategories.map((category) => (
           <div
             key={category.id}
@@ -19,6 +25,7 @@ const WingoList = () => {
               "relative flex flex-col items-center justify-center rounded-xl cursor-pointer transition-all duration-300",
               category.isActive ? "bg-active py-1.5" : "py-1.5"
             )}
+            onClick={() => handleTabClick(category.time)}
           >
             <div className="w-12 h-12">
               <img
@@ -43,7 +50,7 @@ const WingoList = () => {
                 category.isActive ? "text-foreground" : "text-muted-foreground"
               )}
             >
-              {category.time}
+              {category.time === 30 ? "30s" : `${category.time / 60}Min`}
             </span>
           </div>
         ))}

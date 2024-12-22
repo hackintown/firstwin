@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 
 const TableChart = () => {
   const [activeTab, setActiveTab] = useState("game-history");
@@ -178,27 +179,27 @@ const TableChart = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center mt-4 text-gray-300">
-        <span className="text-sm">
-          {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, gameData.length)} of{" "}
-          {gameData.length}
-        </span>
-        <div className="flex gap-2">
+      <div className="flex justify-center items-center mt-4 text-gray-300">
+        <div className="flex gap-x-6 items-center justify-center">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="px-3 py-1 rounded bg-gray-700 disabled:opacity-50"
+            className="px-2 py-2 rounded bg-active disabled:opacity-50"
           >
-            Previous
+            <MdArrowBackIos className="text-foreground size-6" />
           </button>
+          <span className="text-sm">
+            {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, gameData.length)}{" "}
+            of {gameData.length}
+          </span>
           <button
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
             disabled={currentPage === totalPages}
-            className="px-3 py-1 rounded bg-gray-700 disabled:opacity-50"
+            className="px-2 py-2 rounded bg-active disabled:opacity-50"
           >
-            Next
+            <MdArrowForwardIos className="text-foreground size-6" />
           </button>
         </div>
       </div>

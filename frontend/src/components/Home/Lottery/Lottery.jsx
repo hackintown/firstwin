@@ -5,6 +5,7 @@ import {
   IoIosArrowDroprightCircle,
 } from "react-icons/io";
 import { lotteryData } from "./lotteryData";
+import { Link } from "react-router-dom";
 
 const Lottery = () => {
   return (
@@ -39,13 +40,15 @@ const Lottery = () => {
       {/* Cards Grid */}
       <div className="grid grid-cols-3 gap-2">
         {lotteryData.map((item) => (
-          <Card key={item.id}>
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-full h-full object-cover"
-            />
-          </Card>
+          <Link to={`/${item.id}`} key={item.id}>
+            <Card key={item.id}>
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-full h-full object-cover"
+              />
+            </Card>
+          </Link>
         ))}
       </div>
     </div>

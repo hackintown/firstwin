@@ -1,7 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SiGoogledocs } from "react-icons/si";
+import { cn } from "../../../lib/utils";
 
-const TimerCard = () => {
+const TimerCard = ({ initialTime = 30 }) => {
+  // Convert to countdown format (always 1 second less than total time)
+  const getInitialCountdown = (time) => {
+    return time >= 60 ? time - 1 : 29; // For 30s we start from 29, for minutes we subtract 1
+  };
+
+  const [timeRemaining, setTimeRemaining] = useState(
+    getInitialCountdown(initialTime)
+  );
+
+  useEffect(() => {
+    // Reset timer when initialTime changes
+    setTimeRemaining(getInitialCountdown(initialTime));
+
+    const interval = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 0) {
+          // Reset to initial countdown when reaching 0
+          return getInitialCountdown(initialTime);
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [initialTime]);
+
+  // Format time display in MM:SS format
+  const formatTimeDisplay = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+      2,
+      "0"
+    )}`;
+  };
+
   return (
     <div
       style={{ backgroundImage: "url('/images/wingo_timer_card.png')" }}
@@ -14,7 +51,9 @@ const TimerCard = () => {
             <SiGoogledocs className="text-xl" />
             How to play
           </button>
-          <p className="text-white text-sm">Win Go 1Min</p>
+          <p className="text-white text-sm">
+            Win Go {initialTime >= 60 ? `${initialTime / 60}Min` : "30s"}
+          </p>
 
           {/* Lottery Numbers */}
           <div className="flex gap-x-1">
@@ -34,15 +73,20 @@ const TimerCard = () => {
         <div className="text-right">
           <p className="text-foreground mb-1.5">Time remaining</p>
           <div className="flex gap-1">
-            {/* Timer digits */}
-            {["0", "0", ":", "1", "3"].map((digit, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-center bg-foreground text-info font-bold text-xl p-1.5"
-              >
-                {digit}
-              </div>
-            ))}
+            {formatTimeDisplay(timeRemaining)
+              .split("")
+              .map((digit, index) => (
+                <div
+                  key={`time-${index}`}
+                  className={cn(
+                    "flex items-center justify-center bg-foreground text-info font-bold text-xl p-1.5",
+                    // Make colon smaller and adjust alignment
+                    digit === ":" ? "bg-foreground" : ""
+                  )}
+                >
+                  {digit}
+                </div>
+              ))}
           </div>
           <p className="text-foreground text-base font-medium mt-2">
             202412221000610
