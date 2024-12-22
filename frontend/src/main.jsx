@@ -9,46 +9,26 @@ import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import store from "./app/store.js";
 
-// PWA registration using Vite's PWA plugin
+// PWA registration
 if ("serviceWorker" in navigator) {
-  const updateSW = registerSW({
+  registerSW({
     onNeedRefresh() {
-      // Show a prompt to user about new content being available
       if (confirm("New content available. Reload?")) {
-        updateSW(true);
+        window.location.reload();
       }
     },
     onOfflineReady() {
-      // Show a ready to work offline to user
       console.log("App ready to work offline");
     },
+    immediate: true,
   });
 }
 
-// Add PWA installation prompt handler
+// PWA installation handler
 let deferredPrompt;
-window.addEventListener("beforeinstallprompt", (event) => {
-  event.preventDefault();
-  deferredPrompt = event;
-
-  const installButton = document.createElement("button");
-  installButton.textContent = "Install App";
-  installButton.className = "pwa-install-button"; // Add styling class
-  installButton.addEventListener("click", async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log(`User response to the install prompt: ${outcome}`);
-      deferredPrompt = null;
-      installButton.remove(); // Remove button after installation or rejection
-    }
-  });
-
-  document.body.appendChild(installButton);
-});
-
-window.addEventListener("appinstalled", () => {
-  console.log("PWA installed successfully");
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
 });
 
 createRoot(document.getElementById("root")).render(
@@ -56,7 +36,11 @@ createRoot(document.getElementById("root")).render(
     <Provider store={store}>
       <BrowserRouter>
         <App />
-        <ToastContainer position="top-right" autoClose={3000} />
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          className="max-w-app mx-auto"
+        />
       </BrowserRouter>
     </Provider>
   </StrictMode>

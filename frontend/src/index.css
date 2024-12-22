@@ -21,7 +21,7 @@ body {
 
 /* Container for app-like layout */
 .container {
-  max-width: 400px;
+  min-width: 400px;
   width: 100%;
   margin: 0 auto;
   min-height: 100vh;
@@ -31,13 +31,18 @@ body {
 /* Mobile-first container */
 .max-w-md {
   @apply w-full mx-auto;
+  min-width: 400px;
   max-width: 400px;
 }
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
-  .container {
-    max-width: 100%;
+  .container,
+  .max-w-md,
+  .max-w-lg {
+    min-width: 100%;
+    max-width: 500px;
+    width: 100%;
     border-radius: 0;
   }
 }
@@ -46,10 +51,11 @@ body {
   /* Backgrounds - Darker theme for better focus */
   --background: 222, 18%, 11%; /* Darker blue-grey for main background */
   --foreground: 210, 40%, 98%; /* Crisp white with slight blue tint */
-  --card: 223, 18%, 15%; /* Slightly lighter than background */
+  --card: 230, 15%, 20%; /* Slightly lighter than background */
   --card-foreground: 210, 40%, 98%; /* Matching foreground */
   --popover: 222, 18%, 13%; /* Between background and card */
   --popover-foreground: 210, 40%, 98%;
+  --active: 180deg, #29beff 0%, #059aff 100%;
 
   /* Primary and Secondary Colors - More vibrant for betting actions */
   --primary: 130, 70%, 45%; /* Success Green for positive actions */

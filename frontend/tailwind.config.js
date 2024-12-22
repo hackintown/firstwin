@@ -13,13 +13,13 @@ export default {
     },
     extend: {
       animation: {
-        marquee: 'marquee 15s linear infinite'
+        marquee: "marquee 15s linear infinite",
       },
       keyframes: {
         marquee: {
-          '0%': { transform: 'translateY(0)' },
-          '100%': { transform: 'translateY(-50%)' }
-        }
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(-50%)" },
+        },
       },
       fontFamily: {
         sans: ["Poppins", "sans-serif"],
@@ -78,6 +78,9 @@ export default {
           DEFAULT: "hsl(var(--notice))",
           foreground: "hsl(var(--notice-foreground))",
         },
+      },
+      backgroundImage: {
+        active: "linear-gradient(var(--active))",
       },
     },
   },

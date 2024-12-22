@@ -16,12 +16,13 @@ import UserLayout from "./layouts/UserLayout";
 import Unauthorized from "./pages/Unauthorized";
 import AdminLayout from "./layouts/AdminLayout";
 import PWAPrompt from "./components/PWAPrompt";
+import Wingo from "./pages/User/Wingo";
 
 function App() {
   const { isLoading } = useSelector((state) => state.auth);
 
   return (
-    <div className="max-w-md min-h-screen relative overflow-hidden">
+    <div className="max-w-md sm:max-w-full min-h-screen relative overflow-hidden">
       <I18nextProvider i18n={i18n}>
         {/* Show global loader while API requests are processing */}
         {isLoading && <Loader />}
@@ -40,6 +41,7 @@ function App() {
             }
           >
             <Route path="/" element={<Dashboard />} />
+            <Route path="/wingo" element={<Wingo />} />
           </Route>
 
           {/* Protected Admin Routes */}
