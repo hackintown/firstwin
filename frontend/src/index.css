@@ -8,20 +8,36 @@
   box-sizing: border-box;
 }
 
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+    height: 100%;
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+    background-color: var(--background);
+  }
+}
+
 body {
   background-color: #9195a3;
-  font-family: "Poppins", sans-serif;
+  font-family: "Noto Sans KR", "Roboto", system-ui, sans-serif;
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
 }
 
 /* Container for app-like layout */
 .container {
-  min-width: 400px;
   width: 100%;
   margin: 0 auto;
   min-height: 100vh;
@@ -31,20 +47,7 @@ body {
 /* Mobile-first container */
 .max-w-md {
   @apply w-full mx-auto;
-  min-width: 400px;
   max-width: 400px;
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .container,
-  .max-w-md,
-  .max-w-lg {
-    min-width: 100%;
-    max-width: 500px;
-    width: 100%;
-    border-radius: 0;
-  }
 }
 
 :root {

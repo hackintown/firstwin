@@ -6,9 +6,11 @@ export default {
       center: true,
       padding: "1rem",
       screens: {
-        sm: "640px",
-        md: "768px",
-        lg: "450px", // Limit max-width for app-like layout
+        "2xl": "400px",
+        xl: "400px",
+        lg: "400px",
+        md: "400px",
+        sm: "400px",
       },
     },
     extend: {
@@ -22,9 +24,9 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['"Noto Sans KR"', 'Roboto', 'system-ui', 'sans-serif'], 
-        noto: ['"Noto Sans KR"', 'sans-serif'],
-        roboto: ['Roboto', 'sans-serif'],
+        sans: ['"Noto Sans KR"', "Roboto", "system-ui", "sans-serif"],
+        noto: ['"Noto Sans KR"', "sans-serif"],
+        roboto: ["Roboto", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
