@@ -93,7 +93,7 @@ body {
   --shadow: 215, 16%, 10%;
 
   /* Typography remains the same */
-  --font-family: "Poppins", "Roboto", sans-serif;
+  --font-family: "Noto Sans KR", "Roboto", system-ui, sans-serif;
 }
 
 @layer utilities {

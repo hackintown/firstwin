@@ -22,7 +22,9 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["Poppins", "sans-serif"],
+        sans: ['"Noto Sans KR"', 'Roboto', 'system-ui', 'sans-serif'], 
+        noto: ['"Noto Sans KR"', 'sans-serif'],
+        roboto: ['Roboto', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
