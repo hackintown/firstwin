@@ -104,6 +104,29 @@ const TableChart = () => {
     maxConsecutive: [2, 2, 2, 2, 1, 2, 1, 2, 2, 1],
   };
 
+  const getNumberColor = (number) => {
+    const colorMap = {
+      0: {
+        background: 'linear-gradient(180deg, #D23838 50.96%, rgb(182, 89, 254) 50.97%)',
+        isGradient: true
+      },
+      1: "text-[#17B15E]", //green
+      2: "text-[#D23838]", //red
+      3: "text-[#17B15E]", //green
+      4: "text-[#D23838]", //red
+      5: {
+        background: '-webkit-linear-gradient(top, #17B15E 51.48%, rgb(182, 89, 254) 51.49%)',
+        backgroundImage: 'linear-gradient(180deg, #17B15E 51.48%, rgb(182, 89, 254) 51.49%)',
+        isGradient: true
+      },
+      6: "text-[#D23838]", //red
+      7: "text-[#17B15E]", //green
+      8: "text-[#D23838]", //red
+      9: "text-[#17B15E]" //green
+    };
+    return colorMap[number] || "text-white";
+  };
+
   const renderGameHistory = () => (
     <div className="rounded-lg bg-card border border-gray-700 overflow-x-auto">
       <table className="w-full text-sm table-fixed">
@@ -126,38 +149,44 @@ const TableChart = () => {
         <tbody className="divide-y divide-gray-700">
           {currentItems.map((item, index) => (
             <tr
-              key={`${item.period}-${item.number}`}
+              key={`${item?.period}-${item?.number}`}
               className={cn(
                 "hover:bg-gray-800/50 transition-colors duration-150",
                 index === 0 && "animate-highlight"
               )}
             >
               <td className="p-2 text-center text-foreground text-xs truncate">
-                {item.period}
+                {item?.period}
               </td>
               <td
-                className={`p-2 text-center font-bold text-2xl ${
-                  item.color === "red"
-                    ? "text-red-500"
-                    : item.color === "green"
-                    ? "text-green-500"
-                    : "text-purple-500"
-                }`}
+                className={`p-2 text-center font-bold text-2xl ${typeof getNumberColor(item?.result?.number) === 'string'
+                  ? getNumberColor(item?.result?.number)
+                  : ''
+                  }`}
+                style={{
+                  ...(typeof getNumberColor(item?.result?.number) === 'object'
+                    ? {
+                      background: getNumberColor(item?.result?.number).background,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }
+                    : {})
+                }}
               >
-                {item.number}
+                {item?.result?.number}
               </td>
               <td className="p-2 text-center text-foreground">
-                {item.size}
+                {item?.result?.size}
               </td>
               <td className="p-0">
                 <div className="flex justify-center items-center gap-2">
-                  {item.color === "red" && (
+                  {item?.result?.color === "red" && (
                     <div className="w-4 h-4 rounded-full bg-red-500 shadow-lg shadow-red-500/50"></div>
                   )}
-                  {item.color === "green" && (
+                  {item?.result?.color === "green" && (
                     <div className="w-4 h-4 rounded-full bg-green-500 shadow-lg shadow-green-500/50"></div>
                   )}
-                  {item.color === "violet" && (
+                  {item?.result?.color === "violet" && (
                     <div className="w-4 h-4 rounded-full bg-purple-500 shadow-lg shadow-purple-500/50"></div>
                   )}
                 </div>
@@ -208,8 +237,8 @@ const TableChart = () => {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-6 py-2 rounded-md text-sm transition-colors ${activeTab === tab.id
-                ? "bg-active text-foreground font-medium"
-                : "bg-card text-muted-foreground font-normal"
+              ? "bg-active text-foreground font-medium"
+              : "bg-card text-muted-foreground font-normal"
               }`}
           >
             {tab.label}
