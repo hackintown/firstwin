@@ -5,6 +5,7 @@ import compression from "compression";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 import authRoutes from "./routes/authRoutes.js";
+import wingoRoutes from "./routes/wingoRoutes.js";
 import errorHandler from "./middlewares/errorHandler.js";
 
 const app = express();
@@ -52,6 +53,7 @@ app.use("/api", apiLimiter);
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/wingo", wingoRoutes);
 
 // Error Handling Middleware
 app.use(errorHandler);

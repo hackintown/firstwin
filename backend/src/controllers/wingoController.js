@@ -95,19 +95,22 @@ export const startGameLoop = (io) => {
       });
 
       await newGame.save();
-      // Emit result to all connected clients
+
+      // Emit the result
       io.emit(`game:${gameType}`, {
-        type: 'newGame',
-        data: newGame
+        type: "newGame",
+        data: newGame,
       });
 
-      // Emit countdown at 5 seconds
-      setTimeout(() => {
-        io.emit(`game:${gameType}`, {
-          type: 'countdown',
-          data: { timeRemaining: 5 }
-        });
-      }, interval - 5000);
+      // Start countdown
+      const countdownInterval = setInterval(() => {
+        const timeRemaining = Math.max(0, Math.floor((newGame.endTime - Date.now()) / 1000));
+        io.emit(`game:${gameType}`, { type: "countdown", data: { timeRemaining } });
+
+        if (timeRemaining <= 0) {
+          clearInterval(countdownInterval);
+        }
+      }, 1000);
     }, interval);
   });
 };

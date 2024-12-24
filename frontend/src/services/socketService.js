@@ -127,6 +127,11 @@ class SocketService {
                         })
                     );
                     break;
+
+                case "result":
+                    store.dispatch(setGameResult({ gameType, result: data.data.result, period: data.data.period }));
+                    break;
+
                 default:
                     console.warn(`Unknown event type for ${gameType}:`, data.type);
             }

@@ -23,6 +23,7 @@ const selectActiveGameData = createSelector(
 const TimerCard = ({ initialTime = 30 }) => {
   const activeGameType = useSelector(selectActiveGameType);
   const { currentGame, countdown } = useSelector(selectActiveGameData);
+  const [localCountdown, setLocalCountdown] = useState(countdown.value);
 
   useEffect(() => {
     if (!socketService.socket) {
@@ -37,6 +38,16 @@ const TimerCard = ({ initialTime = 30 }) => {
       socketService.unsubscribeFromGame(activeGameType);
     };
   }, [activeGameType]);
+
+  useEffect(() => {
+    setLocalCountdown(countdown.value);
+
+    const timer = setInterval(() => {
+      setLocalCountdown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [countdown.value]);
 
   const formatTime = (seconds) => {
     if (seconds === null || seconds < 0) return "00:00";
@@ -87,15 +98,14 @@ const TimerCard = ({ initialTime = 30 }) => {
         <div className="text-right">
           <p className="text-foreground mb-1.5">Time remaining</p>
           <div className="flex gap-1">
-            {formatTime(countdown.value)
+            {formatTime(localCountdown)
               .split("")
               .map((digit, index) => (
                 <div
                   key={`time-${index}`}
-                  className={cn(
-                    "flex items-center justify-center bg-foreground text-info font-bold text-xl p-1.5",
-                    digit === ":" ? "bg-transparent" : ""
-                  )}
+                  className=
+                  "flex items-center justify-center bg-foreground text-info font-bold text-xl p-1.5"
+
                 >
                   {digit}
                 </div>
@@ -107,10 +117,10 @@ const TimerCard = ({ initialTime = 30 }) => {
         </div>
       </div>
       {/* Countdown Animation Overlay */}
-      {countdown.showAnimation && countdown.value > 0 && (
+      {countdown.showAnimation && localCountdown > 0 && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
           <div className="text-8xl font-bold text-white animate-pulse">
-            {countdown.value}
+            {localCountdown}
           </div>
         </div>
       )}

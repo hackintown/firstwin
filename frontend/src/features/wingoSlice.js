@@ -34,7 +34,7 @@ const wingoSlice = createSlice({
     setCountdown: (state, action) => {
       const { gameType, countdown, showAnimation } = action.payload;
       state.games[gameType].countdown = { value: countdown, showAnimation };
-    },
+  },
 
     // Add the result of a completed game to the history
     setGameResult: (state, action) => {

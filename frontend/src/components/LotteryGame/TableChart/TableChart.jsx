@@ -3,35 +3,97 @@ import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import ChartTable from "./ChartTable";
 import { useSelector } from "react-redux";
 import socketService from "../../../services/socketService";
+import { cn } from "../../../lib/utils";
 
 const TableChart = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState("game-history");
+  const [localHistory, setLocalHistory] = useState([]);
   const itemsPerPage = 10;
 
   const activeGameType = useSelector((state) => state.wingo.activeGameType);
-  const history = useSelector(
+  const countdown = useSelector((state) => state.wingo.games[activeGameType]?.countdown?.value || 0);
+  const reduxHistory = useSelector(
     (state) => state.wingo.games[activeGameType]?.history || []
   );
 
+  // Add effect to handle countdown completion
   useEffect(() => {
-    // Fetch game history when the active game type changes
-    if (activeGameType) {
-      socketService.getGameHistory(activeGameType, 50); // Fetch up to 50 results
+    if (countdown === 0) {
+      // Small delay to ensure backend has processed the result
+      const timeoutId = setTimeout(() => {
+        socketService.getGameHistory(activeGameType, 50).then((newHistory) => {
+          if (newHistory) {
+            setLocalHistory(newHistory);
+          }
+        });
+      }, 1000);
+
+      return () => clearTimeout(timeoutId);
     }
+  }, [countdown, activeGameType]);
+
+  // Modified socket listener for real-time updates
+  useEffect(() => {
+    if (!socketService.socket) return;
+
+    const handleNewResult = (result) => {
+      if (result.gameType === activeGameType) {
+        socketService.getGameHistory(activeGameType, 50).then((newHistory) => {
+          if (newHistory) {
+            setLocalHistory(newHistory);
+            setCurrentPage(1);
+          }
+        });
+      }
+    };
+
+    const handleGameUpdate = () => {
+      socketService.getGameHistory(activeGameType, 50).then((newHistory) => {
+        if (newHistory) {
+          setLocalHistory(newHistory);
+        }
+      });
+    };
+
+    socketService.socket.on('gameResult', handleNewResult);
+    socketService.socket.on(`${activeGameType}:newResult`, handleNewResult);
+    socketService.socket.on(`${activeGameType}Update`, handleGameUpdate);
+
+    // Initial fetch
+    handleGameUpdate();
+
+    return () => {
+      socketService.socket.off('gameResult', handleNewResult);
+      socketService.socket.off(`${activeGameType}:newResult`, handleNewResult);
+      socketService.socket.off(`${activeGameType}Update`, handleGameUpdate);
+    };
   }, [activeGameType]);
+
+  // Add polling mechanism for backup
+  useEffect(() => {
+    const pollInterval = setInterval(() => {
+      socketService.getGameHistory(activeGameType, 50).then((newHistory) => {
+        if (newHistory) {
+          setLocalHistory(newHistory);
+        }
+      });
+    }, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [activeGameType]);
+
+  // Calculate pagination using localHistory instead of redux history
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = localHistory.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(localHistory.length / itemsPerPage);
 
   const tabs = [
     { id: "game-history", label: "Game history" },
     { id: "chart", label: "Chart" },
     { id: "my-history", label: "My history" },
   ];
-
-  // Calculate pagination
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = history.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(history.length / itemsPerPage);
 
   // statistics data
   const statisticsData = {
@@ -64,19 +126,23 @@ const TableChart = () => {
         <tbody className="divide-y divide-gray-700">
           {currentItems.map((item, index) => (
             <tr
-              key={index}
-              className="hover:bg-gray-800/50 transition-colors duration-150"
+              key={`${item.period}-${item.number}`}
+              className={cn(
+                "hover:bg-gray-800/50 transition-colors duration-150",
+                index === 0 && "animate-highlight"
+              )}
             >
               <td className="p-2 text-center text-foreground text-xs truncate">
                 {item.period}
               </td>
               <td
-                className={`p-2 text-center font-bold text-2xl ${item.color === "red"
-                  ? "text-red-500"
-                  : item.color === "green"
+                className={`p-2 text-center font-bold text-2xl ${
+                  item.color === "red"
+                    ? "text-red-500"
+                    : item.color === "green"
                     ? "text-green-500"
                     : "text-purple-500"
-                  }`}
+                }`}
               >
                 {item.number}
               </td>
@@ -110,8 +176,8 @@ const TableChart = () => {
             <MdArrowBackIos className="text-foreground size-6" />
           </button>
           <span className="text-sm">
-            {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, history.length)}{" "}
-            of {history.length}
+            {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, localHistory.length)}{" "}
+            of {localHistory.length}
           </span>
           <button
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
@@ -168,8 +234,8 @@ const TableChart = () => {
               <MdArrowBackIos className="text-foreground size-6" />
             </button>
             <span className="text-sm">
-              {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, history.length)}{" "}
-              of {history.length}
+              {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, localHistory.length)}{" "}
+              of {localHistory.length}
             </span>
             <button
               onClick={() =>

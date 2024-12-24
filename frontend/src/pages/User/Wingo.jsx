@@ -42,10 +42,7 @@ const Wingo = () => {
       <Wallet />
       <NoticeBar />
       <WingoList />
-      <TimerCard
-        gameType={activeGameType}
-        currentGame={currentGame}
-      />
+      <TimerCard />
       <GameSelector
         gameType={activeGameType}
         currentGame={currentGame}
