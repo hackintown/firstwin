@@ -1,21 +1,19 @@
 export const generateWingoResult = () => {
+  // Generate random number 0-9
   const number = Math.floor(Math.random() * 10);
-  let color;
-  let size;
 
-  // Determine color
-  if (number === 0) {
-    color = "violet";
-  } else if (number === 5) {
-    color = "violet";
+  // Determine color based on number
+  let color;
+  if (number === 0 || number === 5) {
+    color = "violet"; // Special numbers get violet
   } else if (number % 2 === 0) {
-    color = "red";
+    color = "red"; // Even numbers get red
   } else {
-    color = "green";
+    color = "green"; // Odd numbers get green
   }
 
   // Determine size
-  size = number >= 5 ? "big" : "small";
+  const size = number >= 5 ? "big" : "small";
 
   return { number, color, size };
 };

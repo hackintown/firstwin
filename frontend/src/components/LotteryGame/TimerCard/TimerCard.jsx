@@ -1,42 +1,48 @@
 import React, { useEffect, useState } from "react";
 import { SiGoogledocs } from "react-icons/si";
+import { useSelector } from "react-redux";
+import { createSelector } from "@reduxjs/toolkit";
 import { cn } from "../../../lib/utils";
+import socketService from "../../../services/socketService";
+
+// Memoized selectors
+const selectActiveGameType = state => state.wingo.activeGameType;
+const selectGames = state => state.wingo.games;
+
+const selectActiveGameData = createSelector(
+  [selectActiveGameType, selectGames],
+  (activeGameType, games) => ({
+    currentGame: games[activeGameType]?.currentGame || null,
+    countdown: games[activeGameType]?.countdown || {
+      value: null,
+      showAnimation: false
+    }
+  })
+);
 
 const TimerCard = ({ initialTime = 30 }) => {
-  // Convert to countdown format (always 1 second less than total time)
-  const getInitialCountdown = (time) => {
-    return time >= 60 ? time - 1 : 29; // For 30s we start from 29, for minutes we subtract 1
-  };
-
-  const [timeRemaining, setTimeRemaining] = useState(
-    getInitialCountdown(initialTime)
-  );
+  const activeGameType = useSelector(selectActiveGameType);
+  const { currentGame, countdown } = useSelector(selectActiveGameData);
 
   useEffect(() => {
-    // Reset timer when initialTime changes
-    setTimeRemaining(getInitialCountdown(initialTime));
+    if (!socketService.socket) {
+      socketService.connect();
+    }
 
-    const interval = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 0) {
-          // Reset to initial countdown when reaching 0
-          return getInitialCountdown(initialTime);
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    // Subscribe to WebSocket updates for the active game type
+    socketService.subscribeToGame(activeGameType);
 
-    return () => clearInterval(interval);
-  }, [initialTime]);
+    return () => {
+      // Unsubscribe when the component unmounts or game type changes
+      socketService.unsubscribeFromGame(activeGameType);
+    };
+  }, [activeGameType]);
 
-  // Format time display in MM:SS format
-  const formatTimeDisplay = (time) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
-      2,
-      "0"
-    )}`;
+  const formatTime = (seconds) => {
+    if (seconds === null || seconds < 0) return "00:00";
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
   };
 
   return (
@@ -52,16 +58,24 @@ const TimerCard = ({ initialTime = 30 }) => {
             How to play
           </button>
           <p className="text-white text-sm">
-            Win Go {initialTime >= 60 ? `${initialTime / 60}Min` : "30s"}
+            Win Go {activeGameType === "30sec" ? "30s" :
+              activeGameType === "1min" ? "1Min" :
+                activeGameType === "3min" ? "3Min" : "5Min"}
           </p>
 
           {/* Lottery Numbers */}
           <div className="flex gap-x-1">
-            {[4, 4, 9, 6, 2].map((number, index) => (
+            {currentGame?.numbers?.map((number, index) => (
               <div
                 key={index}
-                className={`w-7 h-7 rounded-full flex items-center justify-center text-white font-light text-sm
-                  ${index === 2 ? "bg-green-500" : "bg-red-500"}`}
+                className={cn(
+                  "w-7 h-7 rounded-full flex items-center justify-center text-white font-light text-sm",
+                  currentGame?.colors?.[index] === "green"
+                    ? "bg-green-500"
+                    : currentGame?.colors?.[index] === "red"
+                      ? "bg-red-500"
+                      : "bg-purple-500"
+                )}
               >
                 {number}
               </div>
@@ -73,15 +87,14 @@ const TimerCard = ({ initialTime = 30 }) => {
         <div className="text-right">
           <p className="text-foreground mb-1.5">Time remaining</p>
           <div className="flex gap-1">
-            {formatTimeDisplay(timeRemaining)
+            {formatTime(countdown.value)
               .split("")
               .map((digit, index) => (
                 <div
                   key={`time-${index}`}
                   className={cn(
                     "flex items-center justify-center bg-foreground text-info font-bold text-xl p-1.5",
-                    // Make colon smaller and adjust alignment
-                    digit === ":" ? "bg-foreground" : ""
+                    digit === ":" ? "bg-transparent" : ""
                   )}
                 >
                   {digit}
@@ -89,13 +102,20 @@ const TimerCard = ({ initialTime = 30 }) => {
               ))}
           </div>
           <p className="text-foreground text-base font-medium mt-2">
-            202412221000610
+            {currentGame?.period || "Loading..."}
           </p>
         </div>
       </div>
+      {/* Countdown Animation Overlay */}
+      {countdown.showAnimation && countdown.value > 0 && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="text-8xl font-bold text-white animate-pulse">
+            {countdown.value}
+          </div>
+        </div>
+      )}
     </div>
   );
-  s;
 };
 
 export default TimerCard;

@@ -1,31 +1,66 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import socketService from "../../../services/socketService";
 
-const GameSelector = () => {
-  const numbers = [
-    { number: "0", image: "/images/n0.png" },
-    { number: "1", image: "/images/n1.png" },
-    { number: "2", image: "/images/n2.png" },
-    { number: "3", image: "/images/n3.png" },
-    { number: "4", image: "/images/n4.png" },
-    { number: "5", image: "/images/n5.png" },
-    { number: "6", image: "/images/n6.png" },
-    { number: "7", image: "/images/n7.png" },
-    { number: "8", image: "/images/n8.png" },
-    { number: "9", image: "/images/n9.png" },
-  ];
+const GameSelector = ({ gameType, currentGame }) => {
+  const dispatch = useDispatch();
+  const [selectedNumber, setSelectedNumber] = useState(null);
+  const [selectedMultiplier, setSelectedMultiplier] = useState(1);
+  const [betAmount, setBetAmount] = useState(0);
+
+  const numbers = Array.from({ length: 10 }, (_, i) => ({
+    number: String(i),
+    image: `/images/n${i}.png`
+  }));
+
   const multipliers = [1, 5, 10, 20, 50, 100];
+
+  const handlePlaceBet = async (type, value) => {
+    if (!currentGame) return;
+
+    try {
+      await socketService.placeBet(gameType, {
+        type, // 'number', 'color', or 'size'
+        value, // number, 'red'/'green'/'violet', or 'big'/'small'
+        amount: betAmount,
+        multiplier: selectedMultiplier,
+        period: currentGame.period
+      });
+      
+      // Reset selections after successful bet
+      setSelectedNumber(null);
+      setBetAmount(0);
+    } catch (error) {
+      console.error('Bet placement failed:', error);
+      // Handle error (show toast notification etc.)
+    }
+  };
+
+  const handleRandomNumber = () => {
+    const randomNum = Math.floor(Math.random() * 10);
+    setSelectedNumber(String(randomNum));
+  };
 
   return (
     <div className="bg-card rounded-lg p-2 space-y-3">
       {/* Color Selection Buttons */}
       <div className="flex gap-4">
-        <button className="flex-1 py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600">
+        <button 
+          onClick={() => handlePlaceBet('color', 'green')}
+          className="flex-1 py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600"
+        >
           Green
         </button>
-        <button className="flex-1 py-2 px-4 bg-violet-500 text-white rounded-md hover:bg-violet-600">
+        <button 
+          onClick={() => handlePlaceBet('color', 'violet')}
+          className="flex-1 py-2 px-4 bg-violet-500 text-white rounded-md hover:bg-violet-600"
+        >
           Violet
         </button>
-        <button className="flex-1 py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600">
+        <button 
+          onClick={() => handlePlaceBet('color', 'red')}
+          className="flex-1 py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600"
+        >
           Red
         </button>
       </div>
@@ -35,29 +70,37 @@ const GameSelector = () => {
         {numbers.map((item) => (
           <div
             key={item.number}
-            className="aspect-square flex items-center justify-center text-2xl font-bold text-white"
+            onClick={() => {
+              setSelectedNumber(item.number);
+              handlePlaceBet('number', item.number);
+            }}
+            className={`aspect-square cursor-pointer ${
+              selectedNumber === item.number ? 'ring-2 ring-primary' : ''
+            }`}
           >
-            <div className="w-14 h-14 rounded-full flex items-center justify-center">
-              <img
-                src={item.image}
-                alt={`Number ${item.number}`}
-                className="w-16 h-16 object-contain"
-              />
-            </div>
+            <img
+              src={item.image}
+              alt={`Number ${item.number}`}
+              className="w-full h-full object-contain"
+            />
           </div>
         ))}
       </div>
 
-      {/* Multiplier Buttons */}
+      {/* Multiplier and Random Buttons */}
       <div className="flex flex-wrap gap-1.5 justify-between">
-        <button className="px-1.5 py-1.5 text-secondary text-sm border border-secondary rounded-md hover:bg-secondary/30">
+        <button 
+          onClick={handleRandomNumber}
+          className="px-1.5 py-1.5 text-secondary text-sm border border-secondary rounded-md hover:bg-secondary/30"
+        >
           Random
         </button>
         {multipliers.map((multiplier) => (
           <button
             key={multiplier}
+            onClick={() => setSelectedMultiplier(multiplier)}
             className={`px-2 py-1 ${
-              multiplier === 1 ? "bg-primary" : "bg-gray-800"
+              multiplier === selectedMultiplier ? "bg-primary" : "bg-gray-800"
             } text-white rounded-lg hover:opacity-90 text-sm`}
           >
             X{multiplier}
@@ -67,12 +110,29 @@ const GameSelector = () => {
 
       {/* Big/Small Selector */}
       <div className="flex rounded-full overflow-hidden">
-        <button className="flex-1 py-2.5 font-medium bg-primary text-primary-foreground">
+        <button 
+          onClick={() => handlePlaceBet('size', 'big')}
+          className="flex-1 py-2.5 font-medium bg-primary text-primary-foreground"
+        >
           Big
         </button>
-        <button className="flex-1 py-2.5 font-medium bg-info text-info-foreground">
+        <button 
+          onClick={() => handlePlaceBet('size', 'small')}
+          className="flex-1 py-2.5 font-medium bg-info text-info-foreground"
+        >
           Small
         </button>
+      </div>
+
+      {/* Bet Amount Input */}
+      <div className="flex gap-2">
+        <input
+          type="number"
+          value={betAmount}
+          onChange={(e) => setBetAmount(Number(e.target.value))}
+          className="flex-1 px-3 py-2 bg-background rounded-md"
+          placeholder="Enter bet amount"
+        />
       </div>
     </div>
   );

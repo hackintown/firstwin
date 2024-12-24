@@ -20,28 +20,23 @@ export const getWingoGames = async (req, res) => {
   }
 };
 
-// Create new game periods
+// Updated createWingoGames function
 export const createWingoGames = async (req, res) => {
   try {
     const { gameType } = req.body;
     const currentTime = new Date();
-    let interval;
 
-    switch (gameType) {
-      case "30sec":
-        interval = 30000;
-        break;
-      case "1min":
-        interval = 60000;
-        break;
-      case "3min":
-        interval = 180000;
-        break;
-      case "5min":
-        interval = 300000;
-        break;
-      default:
-        throw new Error("Invalid game type");
+    // Validate game type
+    const slots = {
+      "30sec": 30000,
+      "1min": 60000,
+      "3min": 180000,
+      "5min": 300000,
+    };
+
+    const interval = slots[gameType];
+    if (!interval) {
+      throw new Error("Invalid game type");
     }
 
     // Create next 10 periods
@@ -49,7 +44,10 @@ export const createWingoGames = async (req, res) => {
     for (let i = 0; i < 10; i++) {
       const startTime = new Date(currentTime.getTime() + interval * i);
       const endTime = new Date(startTime.getTime() + interval);
-      const period = `${gameType}-${startTime.getTime()}`;
+      // const period = `${gameType}-${startTime.getTime()}`;
+      const period = startTime.toISOString()
+        .replace(/[-:T.Z]/g, '')
+        .slice(0, 17);
 
       games.push({
         gameType,
@@ -61,9 +59,55 @@ export const createWingoGames = async (req, res) => {
     }
 
     await WingoGame.insertMany(games);
-
     res.status(201).json({ message: "Games created successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+// New function for game loop +  WebSocket handling for real-time updates
+export const startGameLoop = (io) => {
+  const slots = [
+    { gameType: "30sec", interval: 30000 },
+    { gameType: "1min", interval: 60000 },
+    { gameType: "3min", interval: 180000 },
+    { gameType: "5min", interval: 300000 },
+  ];
+
+  slots.forEach(({ gameType, interval }) => {
+    setInterval(async () => {
+      const currentTime = new Date();
+
+      // Generate period
+      // const period = `${gameType}-${currentTime.getTime()}`;
+      const period = currentTime.toISOString()
+        .replace(/[-:T.Z]/g, '')
+        .slice(0, 17);
+      const { number, color, size } = generateWingoResult();
+
+      const newGame = new WingoGame({
+        gameType,
+        period,
+        startTime: currentTime,
+        endTime: new Date(currentTime.getTime() + interval),
+        result: { number, color, size },
+        status: "completed",
+      });
+
+      await newGame.save();
+      // Emit result to all connected clients
+      io.emit(`game:${gameType}`, {
+        type: 'newGame',
+        data: newGame
+      });
+
+      // Emit countdown at 5 seconds
+      setTimeout(() => {
+        io.emit(`game:${gameType}`, {
+          type: 'countdown',
+          data: { timeRemaining: 5 }
+        });
+      }, interval - 5000);
+    }, interval);
+  });
 };
